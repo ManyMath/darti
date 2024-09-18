@@ -7,8 +7,6 @@ environment:
   sdk: ^3.5.3
 
 dependencies:
-  native_toolchain_rust: ^0.1.0-dev.7
-  native_assets_cli: ^0.7.3
   path_provider: ^2.1.4
   ffigen: ^14.0.1
   path: ^1.9.0
