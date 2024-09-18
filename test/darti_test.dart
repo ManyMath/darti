@@ -1,16 +1,16 @@
-import 'package:darti/darti.dart';
+import 'package:arti/arti.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('A group of tests', () {
-    final awesome = Awesome();
+    final hello = dartiHello();
 
     setUp(() {
       // Additional setup goes here.
     });
 
     test('First Test', () {
-      expect(awesome.isAwesome, isTrue);
+      expect(hello, "Hello there");
     });
   });
 }

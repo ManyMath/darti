@@ -19,7 +19,7 @@ git clone git@github.com:ManyMath/darti
 cd darti
 git submodule update --init --recursive
 dart pub get
-dart --enable-experiment=native-assets run bin/darti_example.dart
+dart --enable-experiment=native-assets run example/darti_example.dart
 ```
 <!--- TODO: Remove the `git submodule update --init --recursive` step. --->
 and wait a moment as the native assets are built.
@@ -28,7 +28,7 @@ and wait a moment as the native assets are built.
 
 - To generate `arti-ffi_bindings_generated.dart` Dart bindings for C:
   ```
-  dart run ffigen --config ffigen.yaml
+  dart --enable-experiment=native-assets run ffigen --config ffigen.yaml
   ```
 - If bindings are generated for a new (not previously supported/included in `lib/arti_base.dart`)
   function, a wrapper must be written for it by hand (see: `artiStart`, `artiClientBootstrap`).

@@ -64,6 +64,10 @@ void artiProxyStop(Pointer<Void> proxy) {
 // }
 
 /// Prints a hello message to verify FFI linkage.
-void artiHello() {
-  _bindings.arti_hello();
+String dartiHello() {
+  final Pointer<Char> hello = _bindings.darti_hello();
+  final there = hello.cast<Utf8>().toDartString();
+  calloc.free(hello);
+  _bindings.darti_free_string(hello);
+  return there;
 }

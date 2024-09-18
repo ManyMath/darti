@@ -103,13 +103,29 @@ class DartiBindings {
   late final _arti_progress_next = _arti_progress_nextPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<Tor>)>();
 
-  void arti_hello() {
-    return _arti_hello();
+  ffi.Pointer<ffi.Char> darti_hello() {
+    return _darti_hello();
   }
 
-  late final _arti_helloPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('arti_hello');
-  late final _arti_hello = _arti_helloPtr.asFunction<void Function()>();
+  late final _darti_helloPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
+          'darti_hello');
+  late final _darti_hello =
+      _darti_helloPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
+
+  void darti_free_string(
+    ffi.Pointer<ffi.Char> s,
+  ) {
+    return _darti_free_string(
+      s,
+    );
+  }
+
+  late final _darti_free_stringPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Char>)>>(
+          'darti_free_string');
+  late final _darti_free_string =
+      _darti_free_stringPtr.asFunction<void Function(ffi.Pointer<ffi.Char>)>();
 
   ffi.Pointer<ffi.Char> arti_last_error_message() {
     return _arti_last_error_message();
