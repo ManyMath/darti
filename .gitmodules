@@ -1,0 +1,3 @@
+[submodule "arti-ffi"]
+	path = arti-ffi
+	url = git@github.com:ManyMath/arti-ffi
