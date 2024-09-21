@@ -12,7 +12,7 @@ Future<void> main() async {
 
   // Test the hello function.
   print('Calling hello function...');
-  arti.artiHello();
+  arti.dartiHello();
 
   // Start the Tor client.
   print('Starting Tor client...');

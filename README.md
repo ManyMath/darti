@@ -32,3 +32,8 @@ and wait a moment as the native assets are built.
   ```
 - If bindings are generated for a new (not previously supported/included in `lib/arti_base.dart`)
   function, a wrapper must be written for it by hand (see: `artiStart`, `artiClientBootstrap`).
+
+# Acknowledgements
+
+Thank you Diego "rehrar" Salazar and Cypher Stack for commissioning work on pub.dev/packages/tor
+which led me to make this Dart (Flutter-less) alternative.
