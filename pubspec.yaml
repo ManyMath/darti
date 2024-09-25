@@ -1,5 +1,5 @@
 name: arti
-description: Arti (A Rust Tor Implementation) in a Dart package.  Like Foundation-Devices/tor but for commandline applications, too (and original!)
+description: Arti (A Rust Tor Implementation) in a Dart package.  An original re-implementation of Foundation-Devices/tor but for commandline applications, too.
 version: 0.0.2-dev.1
 repository: https://github.com/ManyMath/darti
 platforms:
@@ -7,8 +7,8 @@ platforms:
   ios:
   linux:
   macos:
-  web:
   windows:
+#  web: # will need to migrate from ffi to wasm_ffi, may require separate arti_web package.
 
 environment:
   sdk: ^3.6.0-0

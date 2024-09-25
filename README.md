@@ -1,11 +1,14 @@
 # `arti`
+Arti (A Rust Tor Implementation) in a Dart package.  An original re-implementation of 
+[Foundation-Devices/tor](https://github.com/Foundation-Devices/tor) 
+([`tor` on pub.dev](https://pub.dev/packages/tor)) but for commandline applications, too.
 
 ## Setup
+### Dart 3.6
+This package requires Dart 3.6 for its new native assets feature.
 
 ### Native assets
-
 Native assets is currently an experimental feature that is available in Flutter's `master` branch behind an optional Flutter config:
-
 ```
 flutter config --enable-native-assets
 ```
@@ -13,7 +16,6 @@ flutter config --enable-native-assets
 See [this tracking issue](https://github.com/flutter/flutter/issues/129757) and [this milestone](https://github.com/dart-lang/native/milestone/15) for the eventual inclusion of native assets in a release.
 
 ### Quick setup
-
 ```
 git clone git@github.com:ManyMath/darti
 cd darti
@@ -36,4 +38,4 @@ and wait a moment as the native assets are built.
 # Acknowledgements
 
 Thank you Diego "rehrar" Salazar and Cypher Stack for commissioning work on pub.dev/packages/tor
-which led me to make this Dart (Flutter-less) alternative.
+which led me to make this Dart alternative which does not require Flutter.
