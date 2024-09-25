@@ -37,5 +37,7 @@ and wait a moment as the native assets are built.
 
 # Acknowledgements
 
-Thank you Diego "rehrar" Salazar and Cypher Stack for commissioning work on pub.dev/packages/tor
-which led me to make this Dart alternative which does not require Flutter.
+- Thank you Igor "icota" Cota and Foundation Devices for pub.dev/packages/tor,
+  the Flutter cousin of this package.
+- Thank you Diego "rehrar" Salazar and Cypher Stack for commissioning my work 
+  on the above.
