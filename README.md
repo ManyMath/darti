@@ -27,7 +27,6 @@ dart --enable-experiment=native-assets run example/darti_example.dart
 and wait a moment as the native assets are built.
 
 ## Development
-
 - To generate `arti-ffi_bindings_generated.dart` Dart bindings for C:
   ```
   dart --enable-experiment=native-assets run ffigen --config ffigen.yaml
@@ -36,7 +35,6 @@ and wait a moment as the native assets are built.
   function, a wrapper must be written for it by hand (see: `artiStart`, `artiClientBootstrap`).
 
 # Acknowledgements
-
 - Thank you Igor "icota" Cota and Foundation Devices for pub.dev/packages/tor,
   the Flutter cousin of this package.
 - Thank you Diego "rehrar" Salazar and Cypher Stack for commissioning my work 
