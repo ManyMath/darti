@@ -7,25 +7,34 @@ import 'arti-ffi_bindings_generated.dart';
 
 const String _libName = 'arti_ffi';
 
-/// The dynamic library in which the symbols for [LibArtiBindings] can be found.
 final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
-    return DynamicLibrary.open(
-        'rust/target/release/$_libName.framework/lib$_libName');
+    return DynamicLibrary.open('libarti_ffi.dylib');
   }
-  if (Platform.isAndroid || Platform.isLinux) {
-    return DynamicLibrary.open('arti-ffi/target/release/lib$_libName.so');
+  if (Platform.isAndroid) {
+    return DynamicLibrary.open('libarti_ffi.so');
+  }
+  if (Platform.isLinux) {
+    // Bundled in Flutter; fall back to cargo output for standalone Dart.
+    try {
+      return DynamicLibrary.open('libarti_ffi.so');
+    } catch (_) {
+      return DynamicLibrary.open('../arti-ffi/target/release/libarti_ffi.so');
+    }
   }
   if (Platform.isWindows) {
-    return DynamicLibrary.open('arti-ffi/target/release/lib$_libName.dll');
+    try {
+      return DynamicLibrary.open('arti_ffi.dll');
+    } catch (_) {
+      return DynamicLibrary.open('arti-ffi/target/release/arti_ffi.dll');
+    }
   }
   throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
 }();
 
-/// The bindings to the native functions in [_dylib].
 final DartiBindings _bindings = DartiBindings(_dylib);
 
-/// Starts the Tor client with specified SOCKS port, state directory, and cache directory.
+/// Start Tor with the given SOCKS port and directories.
 Tor artiStart(int socksPort, String stateDir, String cacheDir) {
   final Pointer<Utf8> stateDirPtr = stateDir.toNativeUtf8();
   final Pointer<Utf8> cacheDirPtr = cacheDir.toNativeUtf8();
@@ -38,17 +47,14 @@ Tor artiStart(int socksPort, String stateDir, String cacheDir) {
   return tor;
 }
 
-/// Boots the Tor client.
 bool artiClientBootstrap(Pointer<Void> client) {
   return _bindings.arti_client_bootstrap(client);
 }
 
-/// Sets the Tor client to dormant mode.
 void artiClientSetDormant(Pointer<Void> client, bool softMode) {
   _bindings.arti_client_set_dormant(client, softMode ? true : false);
 }
 
-/// Stops the Tor proxy.
 void artiProxyStop(Pointer<Void> proxy) {
   _bindings.arti_proxy_stop(proxy);
 }
@@ -63,11 +69,10 @@ void artiProxyStop(Pointer<Void> proxy) {
 //   return progress;
 // }
 
-/// Prints a hello message to verify FFI linkage.
+/// Verify FFI linkage.
 String dartiHello() {
   final Pointer<Char> hello = _bindings.darti_hello();
   final there = hello.cast<Utf8>().toDartString();
-  calloc.free(hello);
   _bindings.darti_free_string(hello);
   return there;
 }
