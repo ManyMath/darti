@@ -76,3 +76,31 @@ String dartiHello() {
   _bindings.darti_free_string(hello);
   return there;
 }
+
+/// Non-blocking bootstrap progress (0.0-1.0) and status message.
+({double progress, String message}) artiBootstrapStatus(Pointer<Void> client) {
+  final status = _bindings.arti_bootstrap_status(client);
+  final message = status.message.cast<Utf8>().toDartString();
+  _bindings.darti_free_string(status.message);
+  return (progress: status.progress, message: message);
+}
+
+bool artiReconfigure(Pointer<Void> client, String stateDir, String cacheDir) {
+  final stateDirPtr = stateDir.toNativeUtf8();
+  final cacheDirPtr = cacheDir.toNativeUtf8();
+  final result =
+      _bindings.arti_reconfigure(client, stateDirPtr.cast(), cacheDirPtr.cast());
+  calloc.free(stateDirPtr);
+  calloc.free(cacheDirPtr);
+  return result;
+}
+
+/// Isolated client with separate circuits. Caller frees via [artiClientFree].
+Pointer<Void> artiIsolatedClient(Pointer<Void> client) {
+  return _bindings.arti_isolated_client(client);
+}
+
+/// Free a TorClient. Pointer is invalid after this call.
+void artiClientFree(Pointer<Void> client) {
+  _bindings.arti_client_free(client);
+}

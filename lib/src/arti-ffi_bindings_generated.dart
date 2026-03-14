@@ -75,6 +75,78 @@ class DartiBindings {
   late final _arti_client_set_dormant = _arti_client_set_dormantPtr
       .asFunction<void Function(ffi.Pointer<ffi.Void>, bool)>();
 
+  /// Frees the TorClient allocated by arti_start.
+  /// After calling this, the client pointer is invalid and must not be used.
+  void arti_client_free(
+    ffi.Pointer<ffi.Void> client,
+  ) {
+    return _arti_client_free(
+      client,
+    );
+  }
+
+  late final _arti_client_freePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'arti_client_free');
+  late final _arti_client_free =
+      _arti_client_freePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  /// Returns the current bootstrap status without blocking.
+  /// The caller must free the message string via darti_free_string().
+  BootstrapStatus arti_bootstrap_status(
+    ffi.Pointer<ffi.Void> client,
+  ) {
+    return _arti_bootstrap_status(
+      client,
+    );
+  }
+
+  late final _arti_bootstrap_statusPtr = _lookup<
+          ffi.NativeFunction<BootstrapStatus Function(ffi.Pointer<ffi.Void>)>>(
+      'arti_bootstrap_status');
+  late final _arti_bootstrap_status = _arti_bootstrap_statusPtr
+      .asFunction<BootstrapStatus Function(ffi.Pointer<ffi.Void>)>();
+
+  /// Reconfigures the Tor client with new state and cache directories.
+  /// Returns true on success, false on failure (check arti_last_error_message).
+  bool arti_reconfigure(
+    ffi.Pointer<ffi.Void> client,
+    ffi.Pointer<ffi.Char> state_dir,
+    ffi.Pointer<ffi.Char> cache_dir,
+  ) {
+    return _arti_reconfigure(
+      client,
+      state_dir,
+      cache_dir,
+    );
+  }
+
+  late final _arti_reconfigurePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Bool Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Char>)>>('arti_reconfigure');
+  late final _arti_reconfigure = _arti_reconfigurePtr.asFunction<
+      bool Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Char>)>();
+
+  /// Creates an isolated TorClient that won't share circuits with any other client.
+  /// The caller owns the returned pointer and must free it with arti_client_free().
+  /// Returns null if the input client is null.
+  ffi.Pointer<ffi.Void> arti_isolated_client(
+    ffi.Pointer<ffi.Void> client,
+  ) {
+    return _arti_isolated_client(
+      client,
+    );
+  }
+
+  late final _arti_isolated_clientPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Void> Function(
+              ffi.Pointer<ffi.Void>)>>('arti_isolated_client');
+  late final _arti_isolated_client = _arti_isolated_clientPtr
+      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Void>)>();
+
   void arti_proxy_stop(
     ffi.Pointer<ffi.Void> proxy,
   ) {
@@ -146,4 +218,13 @@ final class Tor extends ffi.Struct {
   external ffi.Pointer<ffi.Void> progress_sender;
 
   external ffi.Pointer<ffi.Void> progress_receiver;
+}
+
+final class BootstrapStatus extends ffi.Struct {
+  /// Progress fraction 0.0 to 1.0
+  @ffi.Float()
+  external double progress;
+
+  /// Human-readable message (Rust-allocated, caller frees via darti_free_string)
+  external ffi.Pointer<ffi.Char> message;
 }
