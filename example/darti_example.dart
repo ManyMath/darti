@@ -1,48 +1,69 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:arti/arti.dart' as arti;
 
 Future<void> main() async {
-  // Get platform-specific cache and state directories.
-  final cacheDir = _getCacheDirectory();
-  final stateDir = _getStateDirectory();
-
-  // Example SOCKS port.
-  int socksPort = 9050;
-
-  // Test the hello function.
-  print('Calling hello function...');
-  arti.dartiHello();
-
-  // Start the Tor client.
-  print('Starting Tor client...');
-  final tor = arti.artiStart(socksPort, stateDir, cacheDir);
-  print('Tor client started.');
-
-  // Bootstrap the Tor client.
-  print('Bootstrapping Tor client...');
-  bool bootstrapped = arti.artiClientBootstrap(tor.client);
-  print('Bootstrap result: ${bootstrapped ? "Success" : "Failure"}');
-
-  // Set Tor client to dormant mode.
-  print('Setting Tor client to dormant mode...');
-  arti.artiClientSetDormant(tor.client, true);
-  print('Tor client set to dormant mode.');
-
-  // // Fetch progress updates.
-  // print('Fetching progress updates...');
-  // String progress;
-  // while ((progress = arti.artiProgressNext(tor)) != null) {
-  //   print('Progress: $progress');
-  // }
-
-  // Stop the Tor proxy.
-  print('Stopping Tor proxy...');
-  arti.artiProxyStop(tor.proxy);
-  print('Tor proxy stopped.');
+  try {
+    await _run();
+  } catch (e, st) {
+    print('Error: $e');
+    print(st);
+  }
 }
 
-//// Get the appropriate cache directory based on the platform.
+Future<void> _run() async {
+  final cacheDir = _getCacheDirectory();
+  final stateDir = _getStateDirectory();
+  int socksPort = 9050;
+
+  print('Testing FFI linkage...');
+  final hello = arti.dartiHello();
+  print('FFI says: $hello');
+
+  print('\nStarting Tor on SOCKS port $socksPort...');
+  final tor = arti.artiStart(socksPort, stateDir, cacheDir);
+
+  print('Bootstrapping...');
+  bool bootstrapped = arti.artiClientBootstrap(tor.client);
+  print('Bootstrap: ${bootstrapped ? "ok" : "failed"}');
+
+  while (true) {
+    final status = arti.artiBootstrapStatus(tor.client);
+    print(
+        'Bootstrap: ${(status.progress * 100).round()}% - ${status.message}');
+    if (status.progress >= 1.0) break;
+    await Future.delayed(Duration(milliseconds: 500));
+  }
+
+  print('\nSetting dormant...');
+  arti.artiClientSetDormant(tor.client, true);
+
+  print('Reconfiguring...');
+  final reconfigured = arti.artiReconfigure(tor.client, stateDir, cacheDir);
+  print('Reconfigure: ${reconfigured ? "ok" : "failed"}');
+
+  print('Creating isolated client...');
+  final isolatedClient = arti.artiIsolatedClient(tor.client);
+  print(
+      'Isolated client: ${isolatedClient != nullptr ? "ok" : "failed"}');
+
+  if (isolatedClient != nullptr) {
+    final isoStatus = arti.artiBootstrapStatus(isolatedClient);
+    print(
+        'Isolated bootstrap: ${(isoStatus.progress * 100).round()}% - ${isoStatus.message}');
+  }
+
+  print('\nStopping proxy...');
+  arti.artiProxyStop(tor.proxy);
+
+  if (isolatedClient != nullptr) {
+    arti.artiClientFree(isolatedClient);
+  }
+  arti.artiClientFree(tor.client);
+  print('Done.');
+}
+
 String _getCacheDirectory() {
   if (Platform.isMacOS) {
     return "${Platform.environment['HOME']}/Library/Caches";
@@ -56,7 +77,6 @@ String _getCacheDirectory() {
   }
 }
 
-/// Get the appropriate state directory based on the platform.
 String _getStateDirectory() {
   if (Platform.isMacOS) {
     return "${Platform.environment['HOME']}/Library/Application Support";
