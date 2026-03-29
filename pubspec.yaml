@@ -1,6 +1,6 @@
 name: arti
 description: Arti (A Rust Tor Implementation) in a Dart package.  An original re-implementation of Foundation-Devices/tor but for commandline applications, too.
-version: 0.0.2-dev.1
+version: 0.0.2
 repository: https://github.com/ManyMath/darti
 platforms:
   android:
@@ -12,6 +12,7 @@ platforms:
 
 environment:
   sdk: ^3.6.0-0
+  flutter: ">=3.27.0"
 
 dependencies:
   path: ^1.9.0

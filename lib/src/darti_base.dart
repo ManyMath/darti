@@ -5,8 +5,6 @@ import 'package:ffi/ffi.dart';
 
 import 'arti-ffi_bindings_generated.dart';
 
-const String _libName = 'arti_ffi';
-
 final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
     return DynamicLibrary.open('libarti_ffi.dylib');
